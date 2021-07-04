@@ -4,7 +4,7 @@ const socketio = require("socket.io");
 const cors = require("cors");
 const { addUser, removeUser, getTheUser, getUsersInRoom } = require("./users");
 
-const PORT = process.env.PORT || "https://quackbox.herokuapp.com/" || 3001;
+const PORT = process.env.PORT || "quackbox.herokuapp.com/" || 3001;
 
 const router = require("./router");
 
