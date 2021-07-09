@@ -8,12 +8,19 @@ const router = require("./router");
 const PORT = process.env.PORT || 3001;
 const corsOptions = {
   origin: "*",
-  credentials: true,
   // [
   //   `https://quackbox.herokuapp.com`,
   //   `http://quackbox.herokuapp.com`,
   //   `http://localhost:3000`,
   // ],
+  allowedHeaders: [
+    "Origin",
+    "X-Requested-With",
+    "Content-Type",
+    "Accept",
+    "content-type",
+    "application/json",
+  ],
 };
 
 const app = express();
@@ -23,6 +30,8 @@ const io = socketio(server, { cors: corsOptions });
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(router);
+
+// app.options('/socket.io', cors())
 
 io.on("connect", (socket) => {
   console.log("We have a new connection");
