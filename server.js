@@ -7,11 +7,13 @@ const router = require("./router");
 
 const PORT = process.env.PORT || 3001;
 const corsOptions = {
-  origin: [
-    `https://quackbox.herokuapp.com`,
-    `http://quackbox.herokuapp.com`,
-    `http://localhost:3000`,
-  ],
+  origin: "*",
+  credentials: true,
+  // [
+  //   `https://quackbox.herokuapp.com`,
+  //   `http://quackbox.herokuapp.com`,
+  //   `http://localhost:3000`,
+  // ],
 };
 
 const app = express();
