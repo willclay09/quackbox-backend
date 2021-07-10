@@ -6,32 +6,36 @@ const { addUser, removeUser, getTheUser, getUsersInRoom } = require("./users");
 const router = require("./router");
 
 const PORT = process.env.PORT || 3001;
-const whitelist = [
-  `https://quackbox.herokuapp.com`,
-  `http://quackbox.herokuapp.com`,
-  `http://localhost:3000`,
-];
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  // allowedHeaders: [
-  //   "Origin",
-  //   "X-Requested-With",
-  //   "Content-Type",
-  //   "Accept",
-  //   "content-type",
-  //   "application/json",
+  origin: "*",
+  // [
+  //   `https://quackbox.herokuapp.com`,
+  //   `http://quackbox.herokuapp.com`,
+  //   `http://localhost:3000`,
   // ],
+  allowedHeaders: [
+    "Origin",
+    "X-Requested-With",
+    "Content-Type",
+    "Accept",
+    "content-type",
+    "application/json",
+  ],
 };
 
 const app = express();
 const server = createServer(app);
 const io = socketio(server, { cors: corsOptions });
+const xhr = new XMLHttpRequest();
+const url = [
+  `https://quackbox.herokuapp.com`,
+  `http://quackbox.herokuapp.com`,
+  `http://localhost:3000`,
+];
+
+xhr.open("GET", url);
+xhr.onreadystatechange = someHandler;
+xhr.send();
 
 app.use(cors(corsOptions));
 app.use(express.json());
