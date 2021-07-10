@@ -27,12 +27,28 @@ const app = express();
 const server = createServer(app);
 const io = socketio(server, { cors: corsOptions });
 
-app.use(
-  app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    next();
-  })
-);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
+app.get((req, res) => {
+  request(
+    {
+      url: [
+        `https://quackbox.herokuapp.com,` ||
+          `http://quackbox.herokuapp.com,` ||
+          `http://localhost:3000`,
+      ],
+    },
+    (error, response, body) => {
+      if (error || response.statusCode !== 200) {
+        return res.status(500).json({ type: "error", message: err.message });
+      }
+
+      res.json(JSON.parse(body));
+    }
+  );
+});
 app.use(express.json());
 app.use(router);
 
