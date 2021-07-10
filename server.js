@@ -6,49 +6,34 @@ const { addUser, removeUser, getTheUser, getUsersInRoom } = require("./users");
 const router = require("./router");
 
 const PORT = process.env.PORT || 3001;
+const whitelist = [
+  `https://quackbox.herokuapp.com`,
+  `http://quackbox.herokuapp.com`,
+  `http://localhost:3000`,
+];
 const corsOptions = {
-  origin: "*",
-  // [
-  //   `https://quackbox.herokuapp.com`,
-  //   `http://quackbox.herokuapp.com`,
-  //   `http://localhost:3000`,
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  // allowedHeaders: [
+  //   "Origin",
+  //   "X-Requested-With",
+  //   "Content-Type",
+  //   "Accept",
+  //   "content-type",
+  //   "application/json",
   // ],
-  allowedHeaders: [
-    "Origin",
-    "X-Requested-With",
-    "Content-Type",
-    "Accept",
-    "content-type",
-    "application/json",
-  ],
 };
 
 const app = express();
 const server = createServer(app);
 const io = socketio(server, { cors: corsOptions });
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  next();
-});
-app.get((req, res) => {
-  request(
-    {
-      url: [
-        `https://quackbox.herokuapp.com,` ||
-          `http://quackbox.herokuapp.com,` ||
-          `http://localhost:3000`,
-      ],
-    },
-    (error, response, body) => {
-      if (error || response.statusCode !== 200) {
-        return res.status(500).json({ type: "error", message: err.message });
-      }
-
-      res.json(JSON.parse(body));
-    }
-  );
-});
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(router);
 
