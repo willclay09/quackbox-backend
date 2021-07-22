@@ -1,13 +1,13 @@
 const createServer = require("http").createServer;
 const express = require("express");
-const socketio = require("socket.io");
+const socketio = require("socket.io")(http);
 const cors = require("cors");
 const { addUser, removeUser, getTheUser, getUsersInRoom } = require("./users");
 const router = require("./router");
 
 const PORT = process.env.PORT || 3001;
 const corsOptions = {
-  origins: ["*:*"],
+  origins: ["*"],
   // [
   //   `https://quackbox.herokuapp.com`,
   //   `http://quackbox.herokuapp.com`,
