@@ -7,24 +7,17 @@ const router = require("./router");
 
 const PORT = process.env.PORT || 3001;
 const corsOptions = {
-  origins: ["*"],
-  // [
-  //   `https://quackbox.herokuapp.com`,
-  //   `http://quackbox.herokuapp.com`,
-  //   `http://localhost:3000`,
-  // ],
-  allowedHeaders: [
-    "Origin",
-    //   "X-Requested-With",
-    //   "Content-Type",
-    //   "Accept",
-    //   "content-type",
-    //   "application/json",
+  origins: [
+    `https://quackbox.herokuapp.com`,
+    `http://quackbox.herokuapp.com`,
+    `http://localhost:3000`,
   ],
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Origin", "Content-Type", "Accept", "X-Requested-With"],
 };
 
 const expressApp = express();
-expressApp.use(cors());
+expressApp.use(cors(corsOptions));
 expressApp.use(express.json());
 expressApp.use(router);
 
