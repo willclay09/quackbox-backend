@@ -29,10 +29,14 @@ expressApp.use(express.json());
 expressApp.use(router);
 
 const server = http.createServer(expressApp);
-const io = socketio(server, {
+const io = socketio(
+  server /*, {
   transports: ["websocket"],
   // cors: corsOptions
-});
+}*/
+);
+io.set("transports", ["websocket"]);
+
 const chat = io.of("/socket-io");
 
 chat.on("connect", (socket) => {
