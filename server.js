@@ -20,6 +20,7 @@ const expressApp = express();
 expressApp.use(cors(corsOptions));
 expressApp.use(express.json());
 expressApp.use(router);
+expressApp.options("*", cors(corsOptions));
 
 const server = http.createServer(expressApp);
 const io = socketio(server, {
