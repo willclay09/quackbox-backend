@@ -1,4 +1,4 @@
-const createServer = require("http").createServer;
+const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
 const cors = require("cors");
@@ -23,18 +23,17 @@ const corsOptions = {
   // ],
 };
 
-const app = express();
-const server = createServer(app);
+const expressApp = express();
+expressApp.use(cors());
+expressApp.use(express.json());
+expressApp.use(router);
+// app.options("/socket.io");
+
+const server = http.createServer(expressApp);
 const io = socketio(server, {
   transports: ["websocket"],
   // cors: corsOptions
 });
-
-// app.use(cors(corsOptions));
-app.use(express.json());
-app.use(router);
-
-// app.options('/socket.io', cors())
 
 io.on("connect", (socket) => {
   console.log("We have a new connection");
