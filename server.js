@@ -13,14 +13,14 @@ const corsOptions = {
   //   `http://quackbox.herokuapp.com`,
   //   `http://localhost:3000`,
   // ],
-  // allowedHeaders: [
-  //   "Origin",
-  //   "X-Requested-With",
-  //   "Content-Type",
-  //   "Accept",
-  //   "content-type",
-  //   "application/json",
-  // ],
+  allowedHeaders: [
+    "Origin",
+    //   "X-Requested-With",
+    //   "Content-Type",
+    //   "Accept",
+    //   "content-type",
+    //   "application/json",
+  ],
 };
 
 const expressApp = express();
