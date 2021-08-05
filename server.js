@@ -33,7 +33,7 @@ const io = socketio(server, {
   transports: ["websocket"],
   // cors: corsOptions
 });
-const chat = io.of("/chat");
+const chat = io.of("/socket-io");
 
 chat.on("connect", (socket) => {
   console.log("We have a new connection");
