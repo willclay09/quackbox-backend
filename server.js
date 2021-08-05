@@ -27,15 +27,15 @@ const expressApp = express();
 expressApp.use(cors());
 expressApp.use(express.json());
 expressApp.use(router);
-// app.options("/socket.io");
 
 const server = http.createServer(expressApp);
 const io = socketio(server, {
   transports: ["websocket"],
   // cors: corsOptions
 });
+const chat = io.of("/chat");
 
-io.on("connect", (socket) => {
+chat.on("connect", (socket) => {
   console.log("We have a new connection");
 
   socket.on("join", ({ name, room }, callback) => {
@@ -53,7 +53,7 @@ io.on("connect", (socket) => {
       .to(user.room)
       .emit("message", { user: "admin", text: `${user.name} has joined!` });
 
-    io.to(user.room).emit("roomData", {
+    chat.to(user.room).emit("roomData", {
       room: user.room,
       users: getUsersInRoom(user.room),
     });
@@ -64,7 +64,7 @@ io.on("connect", (socket) => {
   socket.on("sendMessage", (message, callback) => {
     const user = getTheUser(socket.id);
 
-    io.to(user.room).emit("message", { user: user.name, text: message });
+    chat.to(user.room).emit("message", { user: user.name, text: message });
 
     callback();
   });
@@ -73,11 +73,11 @@ io.on("connect", (socket) => {
     const user = removeUser(socket.id);
 
     if (user) {
-      io.to(user.room).emit("message", {
+      chat.to(user.room).emit("message", {
         user: "Admin",
         text: `${user.name} has left.`,
       });
-      io.to(user.room).emit("roomData", {
+      chat.to(user.room).emit("roomData", {
         room: user.room,
         users: getUsersInRoom(user.room),
       });
