@@ -7,7 +7,7 @@ const router = require("./router");
 
 const PORT = process.env.PORT || 3001;
 const corsOptions = {
-  // origins: ["*"],
+  origins: ["*"],
   // [
   //   `https://quackbox.herokuapp.com`,
   //   `http://quackbox.herokuapp.com`,
@@ -29,13 +29,10 @@ expressApp.use(express.json());
 expressApp.use(router);
 
 const server = http.createServer(expressApp);
-const io = socketio(
-  server /*, {
-  transports: ["websocket"],
-  // cors: corsOptions
-}*/
-);
-io.set("transports", ["websocket"]);
+const io = socketio(server, {
+  // transports: ["websocket"],
+  cors: corsOptions,
+});
 
 const chat = io.of("/socket-io");
 
