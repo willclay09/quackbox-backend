@@ -24,7 +24,7 @@ expressApp.options("*", cors(corsOptions));
 
 const server = http.createServer(expressApp);
 const io = socketio(server, {
-  // transports: ["websocket"],
+  // transports: ["websocket"], // Uncomment this on both here and the frontend if you want to restrict the socketio connection to Web Sockets, eliminating HTTP long-polling.
   cors: corsOptions,
 });
 
