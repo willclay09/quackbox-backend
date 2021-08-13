@@ -5,7 +5,7 @@ const cors = require("cors");
 const { addUser, removeUser, getTheUser, getUsersInRoom } = require("./users");
 const router = require("./router");
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 5000;
 const corsOptions = {
   origins: [
     `https://quackbox.herokuapp.com`,
@@ -17,20 +17,18 @@ const corsOptions = {
 };
 
 const expressApp = express();
-expressApp.use(cors(corsOptions));
-expressApp.use(express.json());
 expressApp.use(router);
+expressApp.use(express.json());
+expressApp.use(cors(corsOptions));
 expressApp.options("*", cors(corsOptions));
 
 const server = http.createServer(expressApp);
 const io = socketio(server, {
-  // transports: ["websocket"],
+  transports: ["websocket"],
   cors: corsOptions,
 });
 
-const chat = io.of("/socket-io");
-
-chat.on("connect", (socket) => {
+io.on("connect", (socket) => {
   console.log("We have a new connection");
 
   socket.on("join", ({ name, room }, callback) => {
@@ -48,7 +46,7 @@ chat.on("connect", (socket) => {
       .to(user.room)
       .emit("message", { user: "admin", text: `${user.name} has joined!` });
 
-    chat.to(user.room).emit("roomData", {
+    io.to(user.room).emit("roomData", {
       room: user.room,
       users: getUsersInRoom(user.room),
     });
@@ -59,7 +57,7 @@ chat.on("connect", (socket) => {
   socket.on("sendMessage", (message, callback) => {
     const user = getTheUser(socket.id);
 
-    chat.to(user.room).emit("message", { user: user.name, text: message });
+    io.to(user.room).emit("message", { user: user.name, text: message });
 
     callback();
   });
@@ -68,11 +66,11 @@ chat.on("connect", (socket) => {
     const user = removeUser(socket.id);
 
     if (user) {
-      chat.to(user.room).emit("message", {
+      io.to(user.room).emit("message", {
         user: "Admin",
         text: `${user.name} has left.`,
       });
-      chat.to(user.room).emit("roomData", {
+      io.to(user.room).emit("roomData", {
         room: user.room,
         users: getUsersInRoom(user.room),
       });
